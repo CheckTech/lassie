@@ -17,11 +17,17 @@ namespace Lassie
     {
         public static int Main(string[] args)
         {
-            Console.WriteLine("Lassie 0.1-alpha\n");
-
             if (args.Length != 4)
             {
                 Console.WriteLine("Usage: (mono) Lassie.exe [user]/[repo] [file] [branch/commit/tag] [out_file]");
+                Console.WriteLine(@"Lassie 0.1-alpha
+                (\
+               (\_\_^__o
+        ___     `-'/ `_/
+       '`--\______/  |
+  '        /         |
+`    .  ' `-`/.------'\^-' mic");
+                
                 return 3;
             }
 
