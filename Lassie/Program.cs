@@ -195,7 +195,8 @@ namespace Lassie
                     Console.Write("OTP: ");
                     string otp = Console.ReadLine();
                     client.DefaultRequestHeaders.Add("X-GitHub-OTP", otp);
-                    response = await client.PostAsync("authorizations", stringContent);
+                    var stringContent2 = new StringContent(contentString);
+                    response = await client.PostAsync("authorizations", stringContent2);
                 }
 
                 string json;
