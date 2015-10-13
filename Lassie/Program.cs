@@ -19,6 +19,12 @@ namespace Lassie
         {
             Console.WriteLine("Lassie 0.1-alpha\n");
 
+            if (args.Length != 4)
+            {
+                Console.WriteLine("Usage: (mono) Lassie.exe [user]/[repo] [file] [branch/commit/tag] [out_file]");
+                return 3;
+            }
+
             var platform = WhichPlatform();
             string configFile, configDir;
 
