@@ -27,7 +27,7 @@ namespace Lassie
        '`--\______/  |
   '        /         |
 `    .  ' `-`/.------'\^-' mic");
-                
+
                 return 3;
             }
 
@@ -128,6 +128,8 @@ namespace Lassie
                 }
 
                 File.WriteAllText(configFile, JsonConvert.SerializeObject(response, Formatting.Indented));
+
+                Console.WriteLine("\nYour personal access token has been stored in {0}. You won't be asked for your password again. You can revoke this token at any time by going to https://github.com/settings/tokens.\n", configFile);
             }
 
             // now it begins
@@ -155,7 +157,7 @@ namespace Lassie
                 return 1;
             }
 
-            Console.WriteLine("Contents of {0}/{1}@{2} written to {3}", args);
+            Console.WriteLine("Contents of {0}/{1}@{2} successfully written to {3}", args);
 
             return 0;
         }
@@ -184,13 +186,24 @@ namespace Lassie
                 var stringContent = new StringContent(contentString);
 
                 var response = await client.PostAsync("authorizations", stringContent);
+
+                // 2FA
+                // https://developer.github.com/v3/auth/#working-with-two-factor-authentication
+                if (response.Headers.Contains("X-GitHub-OTP"))
+                {
+                    Console.WriteLine("Hats off to you for having 2-factor-authentication enabled!");
+                    Console.Write("OTP: ");
+                    string otp = Console.ReadLine();
+                    client.DefaultRequestHeaders.Add("X-GitHub-OTP", otp);
+                    response = await client.PostAsync("authorizations", stringContent);
+                }
+
                 string json;
 
                 if (!response.IsSuccessStatusCode)
                 {
                     try
                     {
-                        // TODO: 2FA
                         json = await response.Content.ReadAsStringAsync();
                         var obj = JsonConvert.DeserializeObject(json);
                         string formatted = JsonConvert.SerializeObject(obj, Formatting.Indented);
