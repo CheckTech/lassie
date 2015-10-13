@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Lassie
@@ -34,11 +35,9 @@ namespace Lassie
 			case Platform.Windows:
 				// do something else
 				// %appdata%
-				Console.WriteLine("This is a reminder to check Windows directories, Will!");
-				return 0;
 				configDir = Path.Combine(
-					                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-					                "McNeel");
+		            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+					"McNeel");
 				Directory.CreateDirectory(configDir);
 				configFile = Path.Combine(configDir, "lassie.json");
 				break;
@@ -129,6 +128,11 @@ namespace Lassie
 			try
 			{
 				string fileContents = Bar(repo, path, commitish, token).Result;
+                if (platform == Platform.Windows)
+                {
+                    string normalised = Regex.Replace(fileContents, @"\r\n|\n\r|\n|\r", "\r\n");
+                    fileContents = normalised;
+                }
 				File.WriteAllText(outFilename, fileContents);
 			}
 			catch (Exception e)
@@ -160,7 +164,9 @@ namespace Lassie
 				var content = new AuthorizationsContent();
 				content.
 				Scopes = new string[]{ "repo" };
-				content.Note = "lassie";
+                string profile = System.Environment.UserName;
+                string hostname = System.Environment.MachineName;
+				content.Note = string.Format("lassie for {0}@{1}", profile, hostname);
 
 				var contentString = JsonConvert.SerializeObject(content);
 				var stringContent = new StringContent(contentString);
