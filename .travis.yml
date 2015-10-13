@@ -1,0 +1,15 @@
+language: csharp
+sudo: false
+env:
+  global:
+  - ARTIFACTS_KEY=AKIAIJ6RNS2NO5AJFEWA
+  - secure: "SerExs+H1fPmbMqE1Mw6M+CgdIws8KwKsSzEmPs0z9stvHOvbRFia1X2mIiOK2TG4+I21UQAu16K2d9ztJC8r5pNTysWFx9X35Si69PLeibrIQVQ9YZ4SML03Sjqe8XkDtF7wDCvxoJvPLpbNHWBsO+ojkHJbmGR59yAOYqd17F4o7FDT+spq8gTOKXz4gpKolpHzVSfVX+LpkAYAMS9GWAZggK4NPbp3CVoJXKdW+dIj4P0YW76CNvt4JEKEVUrCFSjhG4MYSUT8aysXsg3Z3KCOntE1yQEK5UlxilXeQuvSYsWpq8tgwMxcILhmo6vR9mBfNnDiHJu7XU34RS/KIRfdU4SBeuoq+niVjh04igDj1J7yigVFb0hyUOQw7HQUfzp1uRFZmKTYPIJFrvK4WmivAhUXPOHRKx55LDmUoTqGwZ1C3TtfEwBghECpCJr0FG1U0bAvbGxMgMx/zlHRSEbLL0Ia4v1Ig+Z3DAtzEKj/qCwzASmjWvx0x2GEuJRPxFKTmucAtWS0lYuiYhaV+bl1Kbd/8XRuPSvzZnrs4+kr5Keg6Rl1EoTtH4GLem24q+EpBcMoti0u1IEPxJnGP4KVeG6mjIaZ4yW90S5z9ldF4rL6FELFoN3uRIhElTTz02dz3QId48PMmcyRzByhhHDochGmZ1OPetqJr5bdF0="
+  - ARTIFACTS_S3_BUCKET=erdos
+  - ARTIFACTS_S3_REGION=eu-west-1
+  - ARTIFACTS_PERMISSIONS=public-read
+  - ARTIFACTS_TARGET_PATHS=builds/lassie
+solution: Lassie.sln
+after_success:
+- zip -j lassie-${TRAVIS_BUILD_NUMBER}.zip Lassie/bin/Release/{Lassie.exe,Newtonsoft.Json.dll} LICENSE
+- curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
+- artifacts upload lassie-${TRAVIS_BUILD_NUMBER}.zip
