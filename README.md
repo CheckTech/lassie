@@ -13,6 +13,6 @@ Lassie 0.1-alpha
 `    .  ' `-`/.------'\^-' mic
 ```
 
-Expects GitHub credentials to be stored in Window's Credential Manager (see [here][wincred]).
+Expects GitHub credentials to be stored in Windows' Credential Manager (see [here][wincred]).
 
 [wincred]: https://help.github.com/articles/caching-your-github-password-in-git/#platform-windows
