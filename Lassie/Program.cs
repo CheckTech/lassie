@@ -21,7 +21,7 @@ namespace Lassie
         {
             if (args.Length != 4)
             {
-                Console.WriteLine("Usage: (mono) Lassie.exe [user]/[repo] [file] [branch/commit/tag] [out_file]");
+                Console.WriteLine("Usage: [mono] Lassie.exe <user>/<repo> <file> <branch|commit|tag> <out_file>");
                 Console.Write("Lassie {0}", Properties.Resources.Version);
                 Console.WriteLine(@"
                 (\
