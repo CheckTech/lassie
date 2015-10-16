@@ -10,6 +10,7 @@ env:
   - ARTIFACTS_TARGET_PATHS=builds/lassie
   - PACKAGE_NAME=lassie-${TRAVIS_BUILD_NUMBER}
 solution: Lassie.sln
+before_script: echo -n "$(cat Lassie/Resources/Version.txt)+${TRAVIS_BUILD_NUMBER} ($(date -u))" > Lassie/Resources/Version.txt
 after_success:
 - if [[ "$TRAVIS_TAG" != "" ]]; then export PACKAGE_NAME=lassie-${TRAVIS_TAG}; fi
 - zip -j ${PACKAGE_NAME}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
