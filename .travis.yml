@@ -10,6 +10,6 @@ env:
   - ARTIFACTS_TARGET_PATHS=builds/lassie
 solution: Lassie.sln
 after_success:
-- zip -j lassie-${TRAVIS_BUILD_NUMBER}.zip Lassie/bin/Release/{Lassie.exe,Newtonsoft.Json.dll} LICENSE
+- zip -j lassie-${TRAVIS_BUILD_NUMBER}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
 - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
 - artifacts upload lassie-${TRAVIS_BUILD_NUMBER}.zip
