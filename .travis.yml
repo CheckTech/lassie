@@ -10,7 +10,7 @@ after_success:
 - mkdir dist
 - zip -j dist/${PACKAGE_NAME}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
 deploy:
-  provider: s3
+- provider: s3
   access_key_id: AKIAIJ6RNS2NO5AJFEWA
   secret_access_key:
     secure: cQZRn+JX1QfFMJeQ7odKLytgEaqsnJnjsJKkChOVzc/riULOlYZdRMsdtD9Ma6HzIvMfML+nll0dCibCR4TPH+kzGbQb0eY0a4uTTuH41tlxOjk6GbM/dE5oTKgUt/mjLbBoXeUFLxFCuJu/NWCqJ1l3mcg0JeSvBspqrh2BjJMittQbRBojc7MSD5cxTFmfuIdjNzhoHcqnXXr1xP09zK9wcD3U6iEa+Bwo0c02abwZ0PdjJEr//M6TVlddj13j6UsvEYBwsOETaVRmuzmqQ8YH0Kc4qxqUKn4SJhZFCh4ghRkg4os1uPta7M/H9jiOXQLfdHy36fMycCc3H0+tAkeDFW2u3iFaBEjcp0aNKz4kwQTaeOjeHu2e/oMR937+P2f2Go703wdaizjvF75z3slsfCHbfmMvs5bIcIpTHXEW23GzNDe4JBbi0RaBqk2D9DwdEhR1Sv0ovoy7DQNJboKL2eaT7j8ULkd+Y88ZKR+VVzn0LxHc4qxJrnR9G8uDvBDqHEQeLgbxu+1HXs4En4tmIP9YWpzRppl4TyL5yptcx/Cb3Uj+RKEKg1Bl7QUOfr9MsqfQBT4/wk/QzQEyPw2z1Aq9E4MHdyk2FGk0rMHzfWiQrIdYesBGilaMaVS0ePdHAhxGR38mcH0FkbEH8ZZz8OzG9lvbsyR7pra/Y1Q=
@@ -22,3 +22,10 @@ deploy:
   acl: public_read
   on:
     all_branches: true
+- provider: releases
+  api_key:
+    secure: H0RKhJwYz2seO4ABxjxx3syq+WkPDBFF4Ao+pwcPwToa3jwzrD33gdAfa+Cydae/smLurK7I6ILm4Jv5rNCwJhYdOiy4uU7AzmtOd0ISZq3AXHz37uHLGxohWUHJBI97ZM+wGGRq651m+hgP52fCktTdl43aaahwElbixEjoNqjQTwph7C2IZIyxjkWmfYg8zDLsz1YUiWfcycEI02VHaHSoEBbO2rviJ4+eNlBAjfBmFqhqph0xfSwX53Dxx1krx35Lhws3n9ewGnaw2zqgJs+S9YneJOvMATXTac05V2jXE43ZKlDUxW4qN/+QZ1MLyobzeRGpVcC2R5RPsRoAX0v69xv5bK6becLD+CT7qKa/Gozwam49Snj4yVvhXSzFaHGpDYkgTnQUTxTEIW12Hv4yOoVqqlUnz5HkDsdhnxHkx2FtZUd+iOZYAE4cTuIYFP1UlJKngcued8GXptC2Y1fwkaShWjMD+IvvaQeai1MSB1wfR0leMxDM2bUfsAtK1acGQ40Yz0pssduy/R7TAV75Y0MqchJrc4OfFDdqw1+cNB7gvF1cQZQviXIFG/xOkQR8AvGZXj6kRDM2kSl5Pg9GGXTnhDITYCRQzheZ2L0gaU3NiFqMHK07gywfqO0MJd2zjGnKiqMcoitYfSny/PFsSWGNQ2My+zbj03h8iAY=
+  file: dist/${PACKAGE_NAME}.zip
+  skip_cleanup: true
+  on:
+    tags: true
