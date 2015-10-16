@@ -2,17 +2,23 @@ language: csharp
 sudo: false
 env:
   global:
-  - ARTIFACTS_KEY=AKIAIJ6RNS2NO5AJFEWA
-  - secure: "SerExs+H1fPmbMqE1Mw6M+CgdIws8KwKsSzEmPs0z9stvHOvbRFia1X2mIiOK2TG4+I21UQAu16K2d9ztJC8r5pNTysWFx9X35Si69PLeibrIQVQ9YZ4SML03Sjqe8XkDtF7wDCvxoJvPLpbNHWBsO+ojkHJbmGR59yAOYqd17F4o7FDT+spq8gTOKXz4gpKolpHzVSfVX+LpkAYAMS9GWAZggK4NPbp3CVoJXKdW+dIj4P0YW76CNvt4JEKEVUrCFSjhG4MYSUT8aysXsg3Z3KCOntE1yQEK5UlxilXeQuvSYsWpq8tgwMxcILhmo6vR9mBfNnDiHJu7XU34RS/KIRfdU4SBeuoq+niVjh04igDj1J7yigVFb0hyUOQw7HQUfzp1uRFZmKTYPIJFrvK4WmivAhUXPOHRKx55LDmUoTqGwZ1C3TtfEwBghECpCJr0FG1U0bAvbGxMgMx/zlHRSEbLL0Ia4v1Ig+Z3DAtzEKj/qCwzASmjWvx0x2GEuJRPxFKTmucAtWS0lYuiYhaV+bl1Kbd/8XRuPSvzZnrs4+kr5Keg6Rl1EoTtH4GLem24q+EpBcMoti0u1IEPxJnGP4KVeG6mjIaZ4yW90S5z9ldF4rL6FELFoN3uRIhElTTz02dz3QId48PMmcyRzByhhHDochGmZ1OPetqJr5bdF0="
-  - ARTIFACTS_S3_BUCKET=erdos
-  - ARTIFACTS_S3_REGION=eu-west-1
-  - ARTIFACTS_PERMISSIONS=public-read
-  - ARTIFACTS_TARGET_PATHS=builds/lassie
   - PACKAGE_NAME=lassie-${TRAVIS_BUILD_NUMBER}
 solution: Lassie.sln
 before_script: echo -n "$(cat Lassie/Resources/Version.txt)+${TRAVIS_BUILD_NUMBER} ($(date -u))" > Lassie/Resources/Version.txt
 after_success:
 - if [[ "$TRAVIS_TAG" != "" ]]; then export PACKAGE_NAME=lassie-${TRAVIS_TAG}; fi
-- zip -j ${PACKAGE_NAME}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
-- curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
-- artifacts upload ${PACKAGE_NAME}.zip
+- mkdir dist
+- zip -j dist/${PACKAGE_NAME}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
+deploy:
+  provider: s3
+  access_key_id: AKIAIJ6RNS2NO5AJFEWA
+  secret_access_key:
+    secure: cQZRn+JX1QfFMJeQ7odKLytgEaqsnJnjsJKkChOVzc/riULOlYZdRMsdtD9Ma6HzIvMfML+nll0dCibCR4TPH+kzGbQb0eY0a4uTTuH41tlxOjk6GbM/dE5oTKgUt/mjLbBoXeUFLxFCuJu/NWCqJ1l3mcg0JeSvBspqrh2BjJMittQbRBojc7MSD5cxTFmfuIdjNzhoHcqnXXr1xP09zK9wcD3U6iEa+Bwo0c02abwZ0PdjJEr//M6TVlddj13j6UsvEYBwsOETaVRmuzmqQ8YH0Kc4qxqUKn4SJhZFCh4ghRkg4os1uPta7M/H9jiOXQLfdHy36fMycCc3H0+tAkeDFW2u3iFaBEjcp0aNKz4kwQTaeOjeHu2e/oMR937+P2f2Go703wdaizjvF75z3slsfCHbfmMvs5bIcIpTHXEW23GzNDe4JBbi0RaBqk2D9DwdEhR1Sv0ovoy7DQNJboKL2eaT7j8ULkd+Y88ZKR+VVzn0LxHc4qxJrnR9G8uDvBDqHEQeLgbxu+1HXs4En4tmIP9YWpzRppl4TyL5yptcx/Cb3Uj+RKEKg1Bl7QUOfr9MsqfQBT4/wk/QzQEyPw2z1Aq9E4MHdyk2FGk0rMHzfWiQrIdYesBGilaMaVS0ePdHAhxGR38mcH0FkbEH8ZZz8OzG9lvbsyR7pra/Y1Q=
+  bucket: erdos
+  skip_cleanup: true
+  region: eu-west-1
+  local_dir: dist
+  upload-dir: builds/lassie
+  acl: public_read
+  on:
+    all_branches: true
