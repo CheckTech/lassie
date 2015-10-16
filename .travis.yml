@@ -8,9 +8,10 @@ env:
   - ARTIFACTS_S3_REGION=eu-west-1
   - ARTIFACTS_PERMISSIONS=public-read
   - ARTIFACTS_TARGET_PATHS=builds/lassie
-  - if [[ "$TRAVIS_TAG" == "" ]]; then PACKAGE_NAME=lassie-${TRAVIS_BUILD_NUMBER}; else PACKAGE_NAME=lassie-${TRAVIS_TAG}; fi
+  - PACKAGE_NAME=lassie-${TRAVIS_BUILD_NUMBER}
 solution: Lassie.sln
 after_success:
+- if [[ "$TRAVIS_TAG" != "" ]]; then export PACKAGE_NAME=lassie-${TRAVIS_TAG}; fi
 - zip -j ${PACKAGE_NAME}.zip Lassie/bin/Release/{Lassie.exe,*.dll} LICENSE
 - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
 - artifacts upload ${PACKAGE_NAME}.zip
