@@ -111,7 +111,11 @@ namespace Lassie
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Error.WriteLine("Something went wrong fetching the file ({0}).", e.InnerException.Message);
+                string msg = string.Format("{3}: {0}/{1}@{2}.", repo, path, commitish, e.Message);
+                if (e.InnerException != null) {
+                  msg += string.Format(" (Inner Exception = '{0}'", e.InnerException.Message);
+                }
+                Console.Error.WriteLine(msg);
                 Console.ResetColor();
                 return 1;
             }
