@@ -105,6 +105,9 @@ namespace Lassie
                     contents = normalised;
                 }
 
+                // ensure full path to outFilename exists
+                Directory.CreateDirectory(Path.GetDirectoryName(outFilename));
+
                 // write
                 File.WriteAllText(outFilename, contents);
             }
