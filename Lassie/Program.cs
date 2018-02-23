@@ -59,13 +59,20 @@ namespace Lassie
                 {
                     //Credential credential = new Credential { Target = "git:https://<username>@github.com", Type = CredentialType.Generic };
                     credential.Load();
-                    user = credential.Username;
-                    pass = credential.Password;
+                    if (credential.Username == "Personal Access Token")
+                    {
+                        token = credential.Password;
+                    }
+                    else
+                    {
+                        user = credential.Username;
+                        pass = credential.Password;
+                    }
                 }
             }
 
             // if we didn't manage to get credentials from windows' credential manager, try legacy lassie.json config file
-            if (user == null || pass == null)
+            if (token == null && (user == null || pass == null))
             {
                 string configFile = WhereConfig(platform);
 
@@ -106,7 +113,11 @@ namespace Lassie
                 }
 
                 // ensure full path to outFilename exists
-                Directory.CreateDirectory(Path.GetDirectoryName(outFilename));
+                var outDir = Path.GetDirectoryName(outFilename);
+                if (!string.IsNullOrEmpty(outDir))
+                {
+                    Directory.CreateDirectory(outDir);
+                }
 
                 // write
                 File.WriteAllText(outFilename, contents);
@@ -157,6 +168,8 @@ namespace Lassie
 
         private static string Fetch(string repo, string path, string commitish, AuthenticationHeaderValue auth)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // github requires this now!
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.github.com");
